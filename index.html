@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>10.0.0.1 Piso WiFi Network Guide: Gateway, Login, Pause Time & Fixes</title>
+<meta name="description" content="Understand the network behind coin WiFi: what 10.0.0.1 is, how the gateway, DHCP and captive portal work, how pause time is stored, how to reach the admin page, and how to fix 'portal not opening' problems. Includes an IP checker and capacity calculators.">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<!-- REPLACE with your final domain before deploying -->
+<link rel="canonical" href="https://YOUR-SITE-3.example/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="10.0.0.1 Piso WiFi Network Guide: Gateway, Login, Pause Time & Fixes">
+<meta property="og:description" content="The networking side of coin WiFi explained simply, with an IP checker, subnet capacity calculator and troubleshooting flow.">
+<meta property="og:url" content="https://YOUR-SITE-3.example/">
+<style>
+:root{--paper:#fbf8f2;--ink:#1d2433;--mut:#5d667a;--accent:#c2410c;--accent2:#0f766e;--line:#e6dfd1;--card:#fff;--soft:#f3ede0}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;font-size:18px;line-height:1.8}
+h1,h2,h3,h4,.ui,nav,table,button,input,select,label,summary,.kicker{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+a{color:var(--accent);text-underline-offset:3px}
+.bar{background:var(--ink);color:#fff;padding:12px 20px;font:600 .9rem system-ui;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.bar a{color:#ffd9bd;text-decoration:none;margin-left:14px}
+.head{max-width:860px;margin:0 auto;padding:54px 20px 10px}
+.kicker{color:var(--accent);font-weight:800;letter-spacing:1.6px;font-size:.8rem;text-transform:uppercase}
+h1{font-size:clamp(2.1rem,5vw,3.3rem);line-height:1.1;margin:10px 0 16px}
+.deck{font-size:1.2rem;color:#37415a}
+.by{color:var(--mut);font:.88rem system-ui;margin-top:16px}
+.wrap{max-width:860px;margin:0 auto;padding:0 20px 40px}
+h2{font-size:clamp(1.6rem,3.2vw,2.15rem);margin:62px 0 10px;line-height:1.2}
+h2::before{content:"";display:block;width:54px;height:4px;background:var(--accent);margin-bottom:14px;border-radius:2px}
+h3{font-size:1.22rem;margin:30px 0 6px;color:var(--accent2)}
+p{margin:0 0 18px}
+.toc{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 22px;margin:26px 0}
+.toc strong{font-family:system-ui}
+.toc ol{columns:2;margin:10px 0 0;padding-left:20px;font:.95rem/1.9 system-ui}
+@media(max-width:620px){.toc ol{columns:1}}
+.toc a{text-decoration:none}
+.tldr{border:2px solid var(--accent2);background:#ecf8f6;border-radius:14px;padding:18px 22px;margin:24px 0}
+.tldr b{font-family:system-ui;color:var(--accent2)}
+.box{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin:16px 0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.callout{border-left:5px solid var(--accent);background:#fff1e8;padding:13px 18px;border-radius:8px;margin:20px 0;font-size:.98rem}
+.callout.green{border-left-color:var(--accent2);background:#e9f7f4}
+.callout.dark{border-left-color:var(--ink);background:#eceef3}
+.tw{overflow-x:auto;margin:18px 0}
+table{border-collapse:collapse;width:100%;font-size:.93rem;background:var(--card);border:1px solid var(--line)}
+th,td{padding:11px 13px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+th{background:var(--soft)}
+code{background:var(--soft);padding:2px 7px;border-radius:6px;font-size:.9em;color:#8a2c07}
+ol.steps{list-style:none;counter-reset:n;padding:0;margin:18px 0}
+ol.steps li{counter-increment:n;position:relative;padding:14px 16px 14px 62px;margin:10px 0;background:var(--card);border:1px solid var(--line);border-radius:12px}
+ol.steps li::before{content:counter(n);position:absolute;left:14px;top:12px;width:34px;height:34px;border-radius:50%;background:var(--accent);color:#fff;font:800 1rem system-ui;display:grid;place-items:center}
+ol.steps li b{font-family:system-ui}
+.tool label{display:block;margin:10px 0 4px;font-weight:600;font-size:.9rem;color:var(--mut)}
+.tool input,.tool select{width:100%;padding:10px 12px;border:1px solid #cfc6b2;border-radius:9px;font-size:1rem;background:#fff}
+.tool button{margin-top:14px;padding:11px 20px;border:0;border-radius:9px;background:var(--accent2);color:#fff;font-weight:700;font-size:1rem;cursor:pointer}
+.out{margin-top:14px;padding:13px;border-radius:9px;background:var(--soft);font:600 .95rem system-ui;min-height:24px}
+.ok{color:#0f766e}.bad{color:#b42318}
+details{background:var(--card);border:1px solid var(--line);border-radius:12px;margin:10px 0;padding:2px 16px}
+summary{cursor:pointer;font-weight:700;padding:12px 0}
+details p{margin:0 0 14px;font-size:.98rem}
+svg{max-width:100%;height:auto}
+.fig{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin:20px 0;text-align:center}
+.fig figcaption{font:.85rem system-ui;color:var(--mut);margin-top:8px}
+footer{background:var(--ink);color:#c9d0e0;padding:34px 20px;font:.9rem system-ui;text-align:center;margin-top:30px}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Article","headline":"10.0.0.1 Piso WiFi Network Guide: Gateway, Login, Pause Time & Fixes","description":"A networking-first explanation of coin WiFi: private IPs, gateway, DHCP, captive portals, pause time and troubleshooting.","inLanguage":"en","datePublished":"2026-10-24","dateModified":"2026-10-24"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Is 10.0.0.0.1 a valid IP address?","acceptedAnswer":{"@type":"Answer","text":"No. An IPv4 address has four numbers separated by dots. 10.0.0.0.1 has five, so it is almost always a typo for 10.0.0.1."}},
+{"@type":"Question","name":"Why is 10.0.0.1 used so often by vendos?","acceptedAnswer":{"@type":"Answer","text":"It sits inside the private 10.0.0.0/8 range, is easy to remember, and is a common choice for a local gateway that never needs to be reachable from the public internet."}},
+{"@type":"Question","name":"Why can I not open the portal even when I am connected?","acceptedAnswer":{"@type":"Answer","text":"Mobile data, Private DNS, a VPN or a stale browser tab can stop the redirect. Disable them and open the gateway address manually."}},
+{"@type":"Question","name":"Where is paused time stored?","acceptedAnswer":{"@type":"Answer","text":"On the vendo itself, linked to your device identity. It is not stored on your phone or in the cloud by default."}},
+{"@type":"Question","name":"How many devices can a standard /24 network hold?","acceptedAnswer":{"@type":"Answer","text":"A /24 provides 254 usable host addresses, which is far more than a small vendo's access point can serve at once."}}]}
+</script>
+</head>
+<body>
+
+<div class="bar"><span>NetNotes &middot; practical networking for everyday hotspots</span><span><a href="#gateway">Gateway</a><a href="#pause">Pause</a><a href="#tools">Tools</a><a href="#faq">FAQ</a></span></div>
+
+<header class="head">
+  <div class="kicker">Networking explained</div>
+  <h1>10.0.0.1 and Piso WiFi: The Network Behind the Coin Slot</h1>
+  <p class="deck">Most guides tell you which button to press. This one explains why the button exists: how a vendo hands out addresses, hijacks your first web request, tracks your balance, and what that means when something goes wrong.</p>
+  <div class="by">Updated October 2026 &middot; About 15 minutes to read &middot; For users, students and small vendo owners</div>
+</header>
+
+<div class="wrap">
+
+<nav class="toc"><strong>Contents</strong>
+<ol>
+  <li><a href="#summary">The short version</a></li>
+  <li><a href="#private-ip">Why 10.0.0.1 and not something else</a></li>
+  <li><a href="#typo">The 10.0.0.0.1 typo problem</a></li>
+  <li><a href="#topology">How the pieces connect</a></li>
+  <li><a href="#dhcp">DHCP: how your phone gets an address</a></li>
+  <li><a href="#gateway">Finding your gateway</a></li>
+  <li><a href="#captive">Captive portals</a></li>
+  <li><a href="#identity">Device identity and MAC addresses</a></li>
+  <li><a href="#pause">Pause time under the hood</a></li>
+  <li><a href="#admin">Admin access and hardening</a></li>
+  <li><a href="#flow">Troubleshooting flow</a></li>
+  <li><a href="#tools">Interactive tools</a></li>
+  <li><a href="#perf">Speed and fairness</a></li>
+  <li><a href="#glossary">Glossary</a></li>
+  <li><a href="#faq">FAQ</a></li>
+</ol></nav>
+
+<h2 id="summary">The Short Version</h2>
+<div class="tldr"><b>In one paragraph:</b> A coin WiFi machine is a small router with a billing brain. It gives your phone a private address, sets itself (often <code>10.0.0.1</code>) as your gateway, blocks the internet until you have credit, and keeps your remaining time or data tied to your device. Pausing simply tells the machine to stop deducting from that stored balance until you ask it to continue.</div>
+<p>If you only remember three things, make them these: the gateway address is the doorway to the portal, your device identity is the key to your balance, and the owner's settings decide which features, including pause, you actually get.</p>
+
+<h2 id="private-ip">Why Vendos Love 10.0.0.1</h2>
+<p>Every home or shop network uses private addresses that never travel across the public internet. Three blocks are reserved for this purpose, and the <code>10.0.0.0</code> block is the largest. A vendo does not need a public address for its portal; it only needs a simple, memorable one that customers can type if the automatic pop-up fails.</p>
+<div class="tw"><table>
+<tr><th>Private block</th><th>Range</th><th>Typical use</th></tr>
+<tr><td>10.0.0.0/8</td><td>10.0.0.0 to 10.255.255.255</td><td>Large or custom networks; many vendo portals</td></tr>
+<tr><td>172.16.0.0/12</td><td>172.16.0.0 to 172.31.255.255</td><td>Medium networks, some corporate setups</td></tr>
+<tr><td>192.168.0.0/16</td><td>192.168.0.0 to 192.168.255.255</td><td>Typical home routers</td></tr>
+</table></div>
+<p>The tidy, round-looking <code>10.0.0.1</code> is simply the first usable address in its block. Firmware authors like it because it is short, and because it rarely clashes with the <code>192.168.x.x</code> addresses used by most upstream home modems. Avoiding that clash matters: if the vendo and the modem behind it share the same subnet, routing breaks in confusing ways.</p>
+
+<h2 id="typo">The "10.0.0.0.1" Typo Problem</h2>
+<p>Search logs are full of people looking for <a href="https://piso-wifi.org/10-0-0-1-login-admin/">10.0.0.0.1</a>, and it is easy to see why: the address is often read aloud or copied from a screenshot, and an extra zero slips in. The trouble is that an IPv4 address has exactly four numbers separated by dots, each between 0 and 255. Five numbers is not an address at all, so your browser treats it as a search term or throws an error.</p>
+<div class="callout"><strong>What to do instead:</strong> type exactly <code>10.0.0.1</code>, with no extra characters, no "www", and no secure prefix at first. Use <code>http://10.0.0.1</code>. Many local portals do not have a certificate, so forcing <code>https://</code> can show a warning or fail outright.</div>
+<p>Try the IP checker further down this page; it flags five-part addresses and tells you whether an address belongs to a private range.</p>
+
+<h2 id="topology">How the Pieces Connect</h2>
+<figure class="fig">
+<svg viewBox="0 0 760 220" role="img" aria-label="Network topology of a coin WiFi vendo">
+  <rect x="10" y="70" width="130" height="70" rx="12" fill="#f3ede0" stroke="#c9bfa8"/><text x="75" y="100" text-anchor="middle" font-family="system-ui" font-size="14" font-weight="700">Internet</text><text x="75" y="120" text-anchor="middle" font-family="system-ui" font-size="12">ISP line</text>
+  <rect x="190" y="70" width="130" height="70" rx="12" fill="#fff" stroke="#c9bfa8"/><text x="255" y="100" text-anchor="middle" font-family="system-ui" font-size="14" font-weight="700">Modem</text><text x="255" y="120" text-anchor="middle" font-family="system-ui" font-size="12">upstream</text>
+  <rect x="370" y="55" width="150" height="100" rx="12" fill="#ecf8f6" stroke="#0f766e" stroke-width="2"/><text x="445" y="88" text-anchor="middle" font-family="system-ui" font-size="14" font-weight="700">Vendo brain</text><text x="445" y="108" text-anchor="middle" font-family="system-ui" font-size="12">gateway 10.0.0.1</text><text x="445" y="127" text-anchor="middle" font-family="system-ui" font-size="12">DHCP + portal + billing</text>
+  <rect x="570" y="20" width="160" height="50" rx="12" fill="#fff1e8" stroke="#c2410c"/><text x="650" y="50" text-anchor="middle" font-family="system-ui" font-size="13" font-weight="700">Coin acceptor</text>
+  <rect x="570" y="85" width="160" height="50" rx="12" fill="#fff" stroke="#c9bfa8"/><text x="650" y="115" text-anchor="middle" font-family="system-ui" font-size="13" font-weight="700">Wi-Fi access point</text>
+  <rect x="570" y="150" width="160" height="50" rx="12" fill="#fff" stroke="#c9bfa8"/><text x="650" y="180" text-anchor="middle" font-family="system-ui" font-size="13" font-weight="700">Customer phones</text>
+  <g stroke="#1d2433" stroke-width="2" fill="none"><path d="M140 105H190"/><path d="M320 105H370"/><path d="M520 90L570 50"/><path d="M520 105H570"/><path d="M650 135V150"/></g>
+</svg>
+<figcaption>Simplified layout. Real machines may combine several boxes into one device.</figcaption>
+</figure>
+<p>Traffic from your phone goes to the access point, then to the vendo brain, which decides whether you may pass to the modem and out to the internet. The coin acceptor talks only to the brain. That is why a dead coin acceptor does not necessarily take down the Wi-Fi, and why a misbehaving modem can leave you "connected" yet unable to load anything.</p>
+
+<h2 id="dhcp">DHCP: How Your Phone Gets Its Address</h2>
+<p>When you join the network, your phone broadcasts a request. The vendo's DHCP service answers with four pieces of information: an address for you (for example <code>10.0.0.37</code>), the subnet mask, the gateway (<code>10.0.0.1</code>), and a DNS server. Without that exchange, you would show "connected" but have no usable settings.</p>
+<h3>Why leases matter</h3>
+<p>Addresses are loaned for a limited time. If a vendo has a short lease and many customers, addresses recycle quickly. A device that returns after a long pause may receive a different address than before. This is normal and harmless, as long as the machine tracks you by device identity rather than by the address itself.</p>
+<h3>Subnet capacity at a glance</h3>
+<div class="tw"><table>
+<tr><th>Mask</th><th>Prefix</th><th>Usable hosts</th><th>Fits a vendo?</th></tr>
+<tr><td>255.255.255.0</td><td>/24</td><td>254</td><td>Yes, more than enough</td></tr>
+<tr><td>255.255.255.128</td><td>/25</td><td>126</td><td>Yes</td></tr>
+<tr><td>255.255.255.192</td><td>/26</td><td>62</td><td>Yes for small shops</td></tr>
+<tr><td>255.255.255.224</td><td>/27</td><td>30</td><td>Tight at peak hours</td></tr>
+</table></div>
+<p>In practice the radio is the bottleneck long before addresses run out. A single access point rarely serves comfortably more than a few dozen active phones at once.</p>
+
+<h2 id="gateway">Finding Your Gateway Address</h2>
+<p>Instead of guessing, read the address your device was given. The "gateway" or "router" entry is the one you type to reach the portal.</p>
+<div class="grid">
+  <div class="box"><h3>Android</h3><p>Wi-Fi settings, tap the connected network, then open its details or advanced section and look for Gateway or Router.</p></div>
+  <div class="box"><h3>iPhone</h3><p>Settings, Wi-Fi, tap the info icon beside the network, then read the Router field.</p></div>
+  <div class="box"><h3>Windows</h3><p>Open Command Prompt, run <code>ipconfig</code>, and read the Default Gateway line for your Wi-Fi adapter.</p></div>
+  <div class="box"><h3>macOS</h3><p>System Settings, Network, choose Wi-Fi, open Details, and read the Router field under TCP/IP.</p></div>
+</div>
+<p>If the gateway shows something other than <code>10.0.0.1</code>, use that value. Machines differ, and an owner may have changed the default.</p>
+
+<h2 id="captive">Captive Portals: The Pop-Up That Isn't Always There</h2>
+<p>When you join a Wi-Fi network, modern phones quietly request a known test page to see whether the internet works. If the vendo intercepts that request and returns its own page instead, the phone concludes it is behind a captive portal and prompts you to sign in. That prompt is automatic on many devices, but not all, and not always.</p>
+<h3>Things that stop the pop-up</h3>
+<ul>
+  <li><strong>Mobile data left on.</strong> Some phones prefer the connection that appears to have internet and skip the Wi-Fi prompt.</li>
+  <li><strong>Private DNS or encrypted DNS.</strong> The phone's test request goes to a different resolver, so the vendo never gets to intercept it.</li>
+  <li><strong>VPN apps.</strong> Traffic is tunneled before the vendo can redirect it.</li>
+  <li><strong>Cached pages.</strong> An old portal tab may refer to an expired session.</li>
+</ul>
+<div class="callout green"><strong>Reliable fallback:</strong> disable mobile data and any VPN, switch Private DNS off, then open <code>http://10.0.0.1</code> directly in your browser. Typing the address bypasses the whole detection step.</div>
+
+<h2 id="identity">Device Identity and MAC Addresses</h2>
+<p>A vendo cannot trust a changing IP address to know who you are, so it usually keys your balance to your device's hardware identifier, the MAC address. Modern phones can present a random or "private" MAC address per network to protect privacy, which is good for tracking protection but awkward for coin WiFi.</p>
+<div class="tw"><table>
+<tr><th>Setting</th><th>Effect on a vendo</th><th>Recommendation</th></tr>
+<tr><td>Fixed (device) MAC</td><td>Machine recognises you every time</td><td>Best for pause and resume</td></tr>
+<tr><td>Random MAC, stable per network</td><td>Usually recognised on the same network</td><td>Often fine</td></tr>
+<tr><td>Random MAC, rotating</td><td>Machine may see you as a new device</td><td>Turn off for vendo networks</td></tr>
+</table></div>
+<p>If your balance "disappears" after a pause, an identity change is the first thing to rule out, long before blaming the machine.</p>
+
+<h2 id="pause">Pause Time Under the Hood</h2>
+<p>Understanding the mechanism makes the rules feel logical. Here is what the machine is doing when you use <a href="https://piso-wifi.org/">piso wifi pause</a> on a time-based vendo.</p>
+<ol class="steps">
+  <li><b>You press Pause.</b> The portal sends a small request to the vendo's billing service, identifying you by device identity.</li>
+  <li><b>The balance is frozen.</b> The service records your remaining seconds and marks the session as paused rather than active.</li>
+  <li><b>Network access is cut.</b> Your device is moved to the "no credit" state, so the firewall blocks internet traffic again.</li>
+  <li><b>A timer may start.</b> If the owner set a maximum pause window, a separate countdown begins.</li>
+  <li><b>You press Resume.</b> The service looks up your frozen balance, reopens access, and restarts the deduction clock.</li>
+</ol>
+<p>The saved balance lives on the vendo, not on your phone and not on a remote server. That is why a paused balance is useless on a different machine, and why a factory reset or a replaced memory card can wipe it.</p>
+<h3>Edge cases worth knowing</h3>
+<div class="grid">
+  <div class="box"><h4>Power cut during a pause</h4><p>Well-built firmware writes balances to storage, so they survive. Cheap builds may keep them only in memory.</p></div>
+  <div class="box"><h4>Owner changes settings</h4><p>Lowering the maximum pause window can affect sessions already paused.</p></div>
+  <div class="box"><h4>Voucher with pause</h4><p>Voucher time usually joins the same balance, though some machines treat it separately.</p></div>
+  <div class="box"><h4>Roaming between access points</h4><p>If two radios share one brain, you keep your balance. If they are separate machines, you do not.</p></div>
+</div>
+
+<h2 id="admin">Admin Access and Hardening for Owners</h2>
+<p>The management page usually lives on the same address as the portal, under an admin path. Reach it only from a device on your own vendo network. The point of a private address is that the admin page should never be visible from the public internet.</p>
+<h3>First-day checklist</h3>
+<ol class="steps">
+  <li><b>Replace the default login.</b> Factory credentials are widely known. Change both the username and the password the day you install.</li>
+  <li><b>Use a long unique password.</b> A passphrase beats a short complex one, and it must not be reused elsewhere.</li>
+  <li><b>Check what is exposed.</b> Make sure remote management or port forwarding is off unless you truly need it.</li>
+  <li><b>Update firmware.</b> Use only files from the maker or a source you trust; unofficial builds are a security gamble.</li>
+  <li><b>Back up the configuration.</b> Export it so a reset does not cost you your prices, vouchers and pause rules.</li>
+  <li><b>Test as a customer.</b> Use a spare phone to confirm Insert Money, Pause and Resume behave as intended.</li>
+</ol>
+<div class="callout dark"><strong>Why bother?</strong> A compromised vendo can leak customer traffic, hand free time to strangers, or become part of someone else's attack. A ten-minute hardening pass removes most of that risk.</div>
+
+<h2 id="flow">A Troubleshooting Flow That Actually Works</h2>
+<p>Work from the bottom of the stack upward. Each step rules out one layer.</p>
+<div class="tw"><table>
+<tr><th>Step</th><th>Check</th><th>If it fails</th></tr>
+<tr><td>1. Radio</td><td>Is the vendo network name visible with decent signal?</td><td>Move closer; ask the owner about the access point.</td></tr>
+<tr><td>2. Association</td><td>Does your phone say Connected, not "Saved" or "Authentication problem"?</td><td>Forget the network and rejoin.</td></tr>
+<tr><td>3. Address</td><td>Do Wi-Fi details show an IP like 10.0.0.x and a gateway?</td><td>Toggle Wi-Fi; the DHCP service may be stuck.</td></tr>
+<tr><td>4. Portal</td><td>Does <code>http://10.0.0.1</code> load?</td><td>Disable mobile data, VPN and Private DNS; try another browser.</td></tr>
+<tr><td>5. Credit</td><td>Does the portal show remaining time or data?</td><td>Insert coins and press Done Paying; check pause state.</td></tr>
+<tr><td>6. Upstream</td><td>Do sites load, or only the portal?</td><td>The modem or ISP line is down; contact the owner.</td></tr>
+<tr><td>7. Speed</td><td>Is it slow only at certain hours?</td><td>Congestion or a speed cap; try off-peak.</td></tr>
+</table></div>
+
+<h2 id="tools">Interactive Tools</h2>
+<div class="grid">
+  <div class="box tool">
+    <h3>IP Address Checker</h3>
+    <label for="ip">Enter an address</label><input id="ip" type="text" value="10.0.0.0.1" autocomplete="off">
+    <button onclick="chk()">Check</button>
+    <div class="out" id="oip"></div>
+  </div>
+  <div class="box tool">
+    <h3>Subnet Capacity</h3>
+    <label for="pf">Prefix length</label>
+    <select id="pf"><option value="24">/24</option><option value="25">/25</option><option value="26">/26</option><option value="27">/27</option><option value="28">/28</option></select>
+    <button onclick="sub()">Calculate</button>
+    <div class="out" id="osub"></div>
+  </div>
+  <div class="box tool">
+    <h3>Pause Window Planner</h3>
+    <label for="pw">Owner's max pause (hours)</label><input id="pw" type="number" min="1" value="24">
+    <label for="pb">Your remaining balance (minutes)</label><input id="pb" type="number" min="1" value="45">
+    <label for="pa">Hours until you can return</label><input id="pa" type="number" min="0" value="10">
+    <button onclick="pz()">Check plan</button>
+    <div class="out" id="opz"></div>
+  </div>
+</div>
+
+<h2 id="perf">Speed, Fairness and Why It Slows Down</h2>
+<p>One shared line has to serve everyone. If an owner pays for a modest plan and a handful of people stream video, everyone feels it. Owners can limit damage with per-user caps; users can help by trimming background traffic.</p>
+<ul>
+  <li><strong>Airtime is shared.</strong> More phones means each gets a smaller slice of the same radio channel.</li>
+  <li><strong>Distance and walls matter.</strong> A weak signal forces the phone to use slower modulation, which also slows other users.</li>
+  <li><strong>Uploads count too.</strong> Photo backups can saturate a small upstream link.</li>
+  <li><strong>Peak hours are real.</strong> After school and early evening are typically busiest.</li>
+</ul>
+<div class="callout green"><strong>Owner tip:</strong> a modest, steady per-user cap often produces happier customers than raw maximum speed, because pages load consistently instead of swinging between fast and stalled.</div>
+
+<h2 id="glossary">Glossary</h2>
+<div class="tw"><table>
+<tr><th>Term</th><th>Plain-English meaning</th></tr>
+<tr><td>Gateway</td><td>The device that carries your traffic out of the local network; also the portal address.</td></tr>
+<tr><td>DHCP</td><td>The service that hands your phone its address and settings.</td></tr>
+<tr><td>Subnet</td><td>A defined group of addresses that can talk directly.</td></tr>
+<tr><td>Captive portal</td><td>A page that appears before you may use the network.</td></tr>
+<tr><td>MAC address</td><td>A hardware identifier for your network adapter.</td></tr>
+<tr><td>DNS</td><td>The directory that turns site names into addresses.</td></tr>
+<tr><td>Lease</td><td>The period for which an address is loaned to you.</td></tr>
+<tr><td>Firmware</td><td>The software that runs the vendo hardware.</td></tr>
+</table></div>
+
+<h2 id="faq">Frequently Asked Questions</h2>
+<details><summary>Is 10.0.0.0.1 a valid IP address?</summary><p>No. IPv4 addresses have exactly four numbers. Five-part entries are almost always typos of 10.0.0.1.</p></details>
+<details><summary>Why is 10.0.0.1 so common on vendos?</summary><p>It is a short, memorable address in a private range, and it seldom collides with the 192.168.x.x network of a typical upstream modem.</p></details>
+<details><summary>I typed the address but the page is blank. Why?</summary><p>Check for a VPN, mobile data or Private DNS. Also confirm you are on the vendo network and that you typed http, not https.</p></details>
+<details><summary>Where is my paused balance stored?</summary><p>On the vendo itself, linked to your device identity. It does not follow you to another machine.</p></details>
+<details><summary>Why did my balance vanish after pausing?</summary><p>Common causes are a changed or random MAC address, a pause window that expired, or the owner resetting the machine.</p></details>
+<details><summary>Can two phones share one session?</summary><p>Generally no. Sessions are tied to individual devices.</p></details>
+<details><summary>Is the admin page reachable from home?</summary><p>It should not be. A private address is only reachable from inside the local network unless the owner has opened remote access.</p></details>
+<details><summary>Does a longer pause cost me anything?</summary><p>Normally not, but the owner may clear balances after a set window.</p></details>
+<details><summary>How many users can one vendo handle?</summary><p>The address pool is rarely the limit. Radio capacity and the internet plan are the real ceilings.</p></details>
+<details><summary>Should owners use the default gateway address?</summary><p>It is fine, but make sure it does not overlap with the upstream modem's subnet, and always change default admin credentials.</p></details>
+
+</div>
+
+<footer>
+  <p><strong>Disclaimer:</strong> Independent educational content. Hardware, firmware and menus vary widely. Follow your machine owner's instructions and the manufacturer's documentation. Do not attempt to access or modify networks you do not own or have permission to manage.</p>
+  <p>&copy; <span id="yr"></span> NetNotes</p>
+</footer>
+
+<script>
+document.getElementById('yr').textContent=new Date().getFullYear();
+function chk(){
+  var v=document.getElementById('ip').value.trim(),o=document.getElementById('oip');
+  var p=v.split('.');
+  if(p.length!==4){o.innerHTML='<span class="bad">Invalid: found '+p.length+' parts, IPv4 needs exactly 4.</span>'+(v==='10.0.0.0.1'?' You probably meant <b>10.0.0.1</b>.':'');return;}
+  for(var i=0;i<4;i++){if(!/^\d{1,3}$/.test(p[i])||+p[i]>255){o.innerHTML='<span class="bad">Invalid: part '+(i+1)+' ("'+p[i]+'") must be a number from 0 to 255.</span>';return;}}
+  var a=+p[0],b=+p[1],priv=(a===10)||(a===172&&b>=16&&b<=31)||(a===192&&b===168);
+  o.innerHTML='<span class="ok">Valid IPv4.</span> '+(priv?'It is in a <b>private</b> range, typical for a local gateway.':'It is a <b>public-range</b> address, not a normal local vendo gateway.');
+}
+function sub(){
+  var n=+document.getElementById('pf').value,h=Math.pow(2,32-n)-2;
+  document.getElementById('osub').textContent='/'+n+' gives '+h+' usable host addresses.';
+}
+function pz(){
+  var w=+document.getElementById('pw').value,m=+document.getElementById('pb').value,a=+document.getElementById('pa').value,o=document.getElementById('opz');
+  if(a<=w){o.innerHTML='<span class="ok">Safe.</span> You return after '+a+' h, with '+(w-a)+' h of the window to spare. Your '+m+' min should still be there.';}
+  else{o.innerHTML='<span class="bad">Risky.</span> You plan to return after '+a+' h but the window is '+w+' h. Use your '+m+' min before leaving or ask the owner about extending the limit.';}
+}
+chk();sub();pz();
+</script>
+</body>
+</html>
